@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404	
 from django.views.generic.base import TemplateView,RedirectView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
 from .models import Post
+from .forms import PostForm
 # Create your views here.
 def indexView (request):
     return render(request, "index.html")
@@ -31,3 +32,14 @@ class PostList(ListView):
 
 class PostDetailsView(DetailView):
      model = Post
+
+class PostCreateView(FormView):
+    template_name = 'contact.html'
+    form_class = PostForm
+    success_url = '/blog/post/'
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        form.save()
+        return super().form_valid(form)
+
