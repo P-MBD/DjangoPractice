@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView,RedirectView
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .forms import PostForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 # Create your views here.
 
 def indexView (request):
@@ -24,11 +24,12 @@ class RedirectToMaktab(RedirectView):
         print(post)
         return super().get_redirect_url(*args, **kwargs)
 
-class PostList(LoginRequiredMixin, ListView):
-   queryset = Post.objects.all()
-   #model = Post
-   context_object_name = "posts"
-   ordering = 'id'
+class PostList(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required ='blog.view_post'
+    queryset = Post.objects.all()
+    #model = Post
+    context_object_name = "posts"
+    # ordering = 'id'
     # def get_queryset(self):
     #     posts = Post.objects.filter(status= True)
     #     return posts
