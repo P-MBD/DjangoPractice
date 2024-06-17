@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404	
 from django.views.generic.base import TemplateView,RedirectView
-from django.views.generic import ListView, DetailView, FormView, CreateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 from .models import Post
 from .forms import PostForm
 # Create your views here.
@@ -43,3 +43,7 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
+class PostEditView(UpdateView):
+    model = Post
+    form_class = PostForm
+    success_url = '/blog/post/'
