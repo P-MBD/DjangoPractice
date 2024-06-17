@@ -27,7 +27,7 @@ class PostList(ListView):
     #model = Post
     context_object_name = "posts"
     def get_queryset(self):
-        posts = Post.objects.filter(status= False)
+        posts = Post.objects.filter(status= True)
         return posts
 
 class PostDetailsView(DetailView):
@@ -36,6 +36,10 @@ class PostDetailsView(DetailView):
 
 class PostCreateView(CreateView):
     model = Post
-    fields = ['author', 'title','content','status','category','published_date']
+    fields = ['title','content','status','category','published_date']
     success_url= '/blog/post/'
+    def form_valid(self, form):
+        form.instance.author = self.request.user 
+        return super().form_valid(form)
+
 
