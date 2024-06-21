@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
@@ -63,7 +63,7 @@ def postDetail(request,id):
         post.delete()
         return Response({"Detail":"item removed successfully"})'''
 
-class PostDetail(APIView):
+'''class PostDetail(APIView):
     """getting a list of posts and creating new posts"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
@@ -83,4 +83,24 @@ class PostDetail(APIView):
     def delete(self,request, id):
         post = get_object_or_404(Post, pk=id)
         post.delete()
-        return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail":"item removed successfully"}, status=status.HTTP_204_NO_CONTENT)'''
+
+'''class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    permission_classes =[IsAuthenticatedOrReadOnly] 
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)'''
+
+class PostDetail(RetrieveDestroyAPIView):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
+
+
+        
