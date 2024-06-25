@@ -2,11 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status,viewsets
 from rest_framework import mixins
 
 '''@api_view(["GET","POST"])
@@ -35,18 +35,15 @@ def postList(request):
         serializer.save()
         return Response(serializer.data)'''
 
-class PostList(GenericAPIView,mixins.ListModelMixin, mixins.CreateModelMixin):
-    permission_classes = [IsAuthenticated]
+class PostList(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    def get(self,request,*args,**kwargs):
-        """retriveing a list of posts"""
-        return self.list(request,*args,**kwargs)
-    def post(self,request,*args,**kwargs):
-        return self.create(request,*args,**kwargs)
 
-
-
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
 
 '''@api_view(["GET","PUT", "DELETE"])
 def postDetail(request,id):
@@ -96,11 +93,31 @@ def postDetail(request,id):
     def delete(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)'''
 
-class PostDetail(RetrieveDestroyAPIView):
+'''class PostDetail(RetrieveDestroyAPIView):
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+'''
+class PostViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    def list(self, request):
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+    def retrieve(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk = pk)
+        serializer = self.serializer_class(post_object)
+        return Response(serializer.data)
+    def create(self, request):
+        pass
+    def update(self, request, pk=None):
+        pass
 
+    def partial_update(self, request, pk=None):
+        pass
 
+    def destroy(self, request, pk=None):
+        pass
 
-        
+    
