@@ -8,7 +8,7 @@ from ...models import Post, Category
 from django.shortcuts import get_object_or_404
 from rest_framework import status,viewsets
 from rest_framework import mixins
-
+from .permissions import IsOwnerOrReadOnly
 '''@api_view(["GET","POST"])
 def postList(request):
     if request.method == "GET":
@@ -35,15 +35,15 @@ def postList(request):
         serializer.save()
         return Response(serializer.data)'''
 
-class PostList(ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+'''class PostList(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
 
 class PostDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)
+    queryset = Post.objects.filter(status=True)'''
 
 '''@api_view(["GET","PUT", "DELETE"])
 def postDetail(request,id):
@@ -99,7 +99,7 @@ def postDetail(request,id):
     queryset = Post.objects.filter(status=True)
 '''
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
     
