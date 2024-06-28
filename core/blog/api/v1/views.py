@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status,viewsets
 from rest_framework import mixins
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 '''@api_view(["GET","POST"])
 def postList(request):
     if request.method == "GET":
@@ -102,10 +103,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    
-    @action(methods=["get"], detail=False)
-    def get_ok(self, request):
-        return Response({'detail':'ok'})
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'author', 'status']
     
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
