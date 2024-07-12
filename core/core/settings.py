@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema' }

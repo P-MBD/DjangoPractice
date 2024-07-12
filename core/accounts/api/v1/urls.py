@@ -16,6 +16,7 @@ urlpatterns =[
     path('token/login/', views.CustomObtainAuthToken.as_view(), name='token-login'),
     path('token/logout',views.CustomDiscardAuthToken.as_view(), name='token-logout'),
     #change password
+    path('password-change/', views.ChangePasswordApiView.as_view(), name='change-password'),
     #reset password
     #login token
     #login jwt
