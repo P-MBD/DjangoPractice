@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+from ...models import User,Profile
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password1= serializers.CharField(max_length=255, write_only=True)
@@ -78,3 +79,8 @@ class ChangePasswordSerializer(serializers.Serializer):
 
         return super().validate(attrs)
         
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source='user.email')
+    class Meta:
+        model = Profile
+        fields = ('id','email','first_name','last_name','image','description')

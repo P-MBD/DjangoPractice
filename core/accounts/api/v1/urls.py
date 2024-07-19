@@ -22,5 +22,6 @@ urlpatterns =[
     #login jwt
     path('api/token/', TokenObtainPairView.as_view(), name='jwt-create'),
     path('api/refresh/', TokenRefreshView.as_view(), name='jwt-refresh'),
-    path('api/verify',TokenVerifyView.as_view(), name='jwt-verify')
+    path('api/verify',TokenVerifyView.as_view(), name='jwt-verify'),
+    path('profile/',views.ProfileApiView.as_view(), name="profile")
 ]
