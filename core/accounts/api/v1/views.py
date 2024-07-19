@@ -1,5 +1,5 @@
 from rest_framework import generics
-from .serializers import RegistrationSerializer,CustomAuthTokenSerializer,ChangePasswordSerializer,ProfileSerializer
+from .serializers import RegistrationSerializer,CustomAuthTokenSerializer,ChangePasswordSerializer,ProfileSerializer,CustomTokenObtainPairSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.views import TokenObtainPairView
 from ...models import Profile
 
 User = get_user_model()
@@ -43,6 +44,9 @@ class CustomObtainAuthToken(ObtainAuthToken):
     def validate(self, attrs):
         username = attrs.get('email')
         password = attrs.get('password')
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class= CustomTokenObtainPairSerializer
+
 
 class CustomDiscardAuthToken(APIView):
     permission_classes=[IsAuthenticated]
